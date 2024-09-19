@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id   Int     @id @default(autoincrement())
+  userName  String @unique
+  email String  @unique 
+  password String
+  role String
+  photo String?
+}
+
+model Card {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  category    String
+  quantity    Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  photo       String?
+  cardCode    String
+  platform    String
+  duoDate     DateTime
+  vouchers    Voucher[]  // Relation to Voucher
+  vistorsNumber Int?
+
+}
+
+model Voucher {
+  id    Int    @id @default(autoincrement())
+  price  Float
+  photo  String?
+  quantity Int
+  cardId Int    // Foreign key to Card
+  card   Card   @relation(fields: [cardId], references: [id])
+}
